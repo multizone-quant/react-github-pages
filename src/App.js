@@ -17,7 +17,7 @@ class App extends React.Component  {
     console.log('comp mounted rendered')
 
     this.Request2Upbit2()
-//    this.Request2Smon()
+    this.Request2Smon()
     this.Request2HiveEngine()
 
     setTimeout(() => {
@@ -104,15 +104,13 @@ class App extends React.Component  {
     return (
       <div> 
         {isLoading ? 'Loading...' : (
-          <div>
-          <GetPriceFromUpbit data={this.state.upbitData} coin='KRW-STEEM' />
-          </div>
+        <div>
+            <GetPriceFromSmon data={this.state.smonData} />
+            <GetPriceFromUpbit data={this.state.upbitData} />
+            <h2 style={{textAlign:"center"}}> &nbsp;Steem Monster Information &nbsp;</h2>  
+        </div>
         )
         }
-
-        <h2> number is {this.state.count} </h2>
-        <button onClick={this.Add}> add </button>
-        <button onClick={this.Request2Upbit}> get price </button>
       </div>
     )
   }

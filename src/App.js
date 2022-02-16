@@ -12,10 +12,12 @@ class App extends React.Component  {
     upbitData : {},
     smonData:{},
     hiveData:{},    
+    geckoData:{},
   }
   componentDidMount() {
     console.log('comp mounted rendered')
 
+    this.Request2Coingecko()
     this.Request2Upbit2()
     this.Request2Smon()
     this.Request2HiveEngine()
@@ -30,13 +32,26 @@ class App extends React.Component  {
     console.log(this.state.count)
   }
 
-  Request2Smon =() => {
+  Request2Smon =async() => {
     const  url = "https://api2.splinterlands.com/settings"
     fetch(url)
     .then((response) => response.json())
     .then((json) => {
       this.setState({smonData :json})
     });
+  }
+
+  // https://www.coingecko.com/api/documentations/v3#/
+  Request2Coingecko = async() => {
+    const API_URL = 'https://api.coingecko.com/api/v3/simple'    
+    const ticker = 'HIVE'
+    const url2 = API_URL+'/price?vs_currencies=USD&ids=' + ticker
+    console.log(url2)
+
+    const data  = await axios.get(url2);
+    console.log('Request2Coingecko done', data, ticker, data.data.hive.usd)
+    //const res = {'ticker':ticker, 'price':data.data.hive.usd}
+    this.setState({geckoData :  data.data.hive.usd})
   }
 
   // for balance -> contract: "tokens", table: "balances",  query: { account },
@@ -106,7 +121,7 @@ class App extends React.Component  {
       <div> 
         {isLoading ? 'Loading...' : (
         <div>
-            <GetPriceFromSmon data={this.state.hiveData} />
+            <GetPriceFromSmon data={this.state.hiveData} hive={this.state.geckoData} />
             <GetPriceFromUpbit data={this.state.upbitData} />
             <h2 style={{textAlign:"center"}}> &nbsp;Steem Monster Information &nbsp;</h2>  
         </div>

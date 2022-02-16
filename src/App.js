@@ -11,7 +11,7 @@ class App extends React.Component  {
     count : 0,
     upbitData : {},
     smonData:{},
-    hiveBalance:{},    
+    hiveData:{},    
   }
   componentDidMount() {
     console.log('comp mounted rendered')
@@ -39,17 +39,18 @@ class App extends React.Component  {
     });
   }
 
+  // for balance -> contract: "tokens", table: "balances",  query: { account },
   Request2HiveEngine = async() => {
     const SE_URL = "https://ha.herpc.dtools.dev/contracts";
     const account = 'tradingideas'
     const data  = await axios.post(SE_URL, {
           jsonrpc: "2.0",
-          id: 1,
+          id: 7,
           method: "find",
           params: {
-            contract: "tokens",
-            table: "balances",
-            query: { account },
+            contract: "market", 
+            table: "metrics",  
+            query: { },
             limit: 1000,
             offset: 0,
             indexes: [],
@@ -59,7 +60,7 @@ class App extends React.Component  {
     console.log('hive_engine', data)    
     console.log('hive_engine', data.data.id, data.data.result)    
 
-    this.setState({hiveBalance :data.data.result})
+    this.setState({hiveData :data.data.result})
   };
   
   Request2Upbit2 = async() => {
@@ -105,7 +106,7 @@ class App extends React.Component  {
       <div> 
         {isLoading ? 'Loading...' : (
         <div>
-            <GetPriceFromSmon data={this.state.smonData} />
+            <GetPriceFromSmon data={this.state.hiveData} />
             <GetPriceFromUpbit data={this.state.upbitData} />
             <h2 style={{textAlign:"center"}}> &nbsp;Steem Monster Information &nbsp;</h2>  
         </div>

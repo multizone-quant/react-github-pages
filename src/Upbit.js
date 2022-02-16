@@ -5,7 +5,7 @@ function FromUpbit({data, coin}) {
     for (var i=0; i < data.length; i++) {
         if (data[i].market === coin) {
             console.log(coin)
-                return (data[i].trade_price).toLocaleString() + '(' + (data[i].signed_change_rate*100).toFixed(2) + '%)'
+                return (data[i].trade_price).toLocaleString() + ' (' + (data[i].signed_change_rate*100).toFixed(2) + '%)'
         }
     }
     
@@ -21,13 +21,13 @@ function GetPriceFromUpbit({data}) {
         <table  border="0.5" align="right">
             <tbody>
                 <tr>
-                    <td> STEEM </td> <td> <FromUpbit data={data} coin='KRW-STEEM'/> </td>
+                    <td> STEEM </td> <td> &nbsp;<FromUpbit data={data} coin='KRW-STEEM'/> </td>
                 </tr>                                    
                 <tr>
-                    <td> SBD </td> <td> <FromUpbit data={data} coin='KRW-SBD'/> </td>
+                    <td> SBD </td> <td> &nbsp;<FromUpbit data={data} coin='KRW-SBD'/> </td>
                 </tr>
                 <tr>
-                    <td> HIVE </td> <td> <FromUpbit data={data} coin='KRW-HIVE'/> </td>
+                    <td> HIVE </td> <td> &nbsp;<FromUpbit data={data} coin='KRW-HIVE'/> </td>
                 </tr>
             </tbody>
         </table>

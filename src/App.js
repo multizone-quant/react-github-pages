@@ -20,7 +20,7 @@ class App extends React.Component  {
   state = {
     loading : -1,
     status : -1,
-    account : 'tradingideas',
+    account : '',
     count : 0,
     upbitData : {},
     smonData:{},
@@ -32,10 +32,10 @@ class App extends React.Component  {
   componentDidMount() {
     console.log('comp mounted rendered')
 
-//    this.Request2Coingecko()
+    this.Request2Coingecko()
     this.Request2Upbit2()
-//    this.Request2Smon()
-//    this.Request2HiveEngine()
+    this.Request2Smon()
+    this.Request2HiveEngine()
 
     setTimeout(() => {
       this.setState({loading:false});
@@ -126,7 +126,6 @@ class App extends React.Component  {
   // for balance -> contract: "tokens", table: "balances",  query: { account },
   Request2HiveEngine = async() => {
     const SE_URL = "https://ha.herpc.dtools.dev/contracts";
-    const account = 'tradingideas'
     const data  = await axios.post(SE_URL, {
           jsonrpc: "2.0",
           id: 7,

@@ -12,26 +12,6 @@ import {useDocumentData} from "react-firebase-hooks/firestore";
 
 //https://prices.splinterlands.com/prices
 
-function FromHE({data, hive, coin}) {
-    
-//    console.log('fromHiveEngine', hive)
-    for (var i=0; i < data.length; i++) {
-        if (data[i].symbol === coin) {
-            var price = parseFloat(data[i].lastPrice)
-            var toFix = 4
-            if (coin === 'DEC') 
-                toFix = 5
-
-            return (price * hive).toFixed(toFix) + ' (' + data[i].priceChangePercent +')  ' +  price.toFixed(toFix) + ' HIVE'
-        }
-    }
-    
-    const ret = 'no coin name ' + coin
-    return (
-        ret
-    );
-}
-
 async function GetFromFireBase() {
 /*    
     console.log('before auth')
@@ -48,6 +28,8 @@ async function GetFromFireBase() {
     console.log('after doc')
     const data = docSnap.data()
     console.log(data.date, data.qty)
+
+    return [data]
 
 /*
     const docSnap = await getDocs(docRef);
@@ -86,32 +68,37 @@ async function GetFromFireBase() {
       arry.push(doc.data());      
     });
     console.log(arry);
-*/
+                                <td> &nbsp;{info.data().date.toLocaleString()} &nbsp;</td>  
+                                <td> &nbsp;{new Date(info.data().date).toLocaleString()} &nbsp;</td>  
+
+                                <td> &nbsp;{info.data().date.toLocaleString()} &nbsp;</td>  
+                                <td> &nbsp;{info.data().qty.toLocaleString()} &nbsp;</td> 
+
+                                */
 }
 
-function GetPriceFromSmon({data, hive}) {
-//    GetFromFireBase()
-
+function GetChaosInfo({data}) {
+    console.log('GetChaosInfo', data)    
     return (
         <div>
-        <table  border="0.5" align="left">
-            <tbody>
-                <tr>
-                    <td> DEC </td> <td> &nbsp;<FromHE data={data} hive={hive} coin='DEC'/> </td>
-                </tr>                                    
-                <tr>
-                    <td> SPS </td> <td> &nbsp;<FromHE data={data} hive={hive} coin='SPS'/> </td>
-                </tr>
-                <tr>
-                    <td> CHAOS </td> <td> &nbsp;<FromHE data={data} hive={hive} coin='CHAOS'/> </td>
-                </tr>
-                <tr>
-                    <td> VOUCHER </td> <td> &nbsp;<FromHE data={data} hive={hive} coin='VOUCHER'/> </td>
-                </tr>
-            </tbody>
-        </table>
+            <table border="1" align="center">
+                <thead>
+                    <th> Date </th>
+                    <th> Qty </th>
+                    <th> &nbsp; Increase &nbsp;</th>
+                </thead>
+                <tbody>
+                    {data.map((info, index) => (
+                            <tr key={index} align="center"> 
+                                <td> &nbsp;{info.date} &nbsp;</td>  
+                                <td> &nbsp; &nbsp;{info.qty.toLocaleString()} &nbsp;</td> 
+                                <td> &nbsp;{info.diff.toLocaleString()} &nbsp;</td> 
+                            </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
     );
 }
 
-export default GetPriceFromSmon;
+export default GetChaosInfo;

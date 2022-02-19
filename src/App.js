@@ -82,6 +82,7 @@ class App extends React.Component  {
 //        console.log(ret)
       }
       else {
+
         var col = collection(db, "smon-related", "chaos-pack", "2022-02-19")
         const docSnap = await getDocs(col);
         var pre = 0
@@ -100,6 +101,9 @@ class App extends React.Component  {
         });
         console.log(ret)
       }      
+
+      // sort
+      ret.sort((a,b) => b.date.localeCompare(a.date));
       this.setState({status:8})
       this.setState({infos :ret})
     }
@@ -107,6 +111,7 @@ class App extends React.Component  {
 
   onChaos = (event) => {
       this.setState({status:1})// 1 : loading
+      this.setState({infos :[]})
       this.Request2FireBase('chaos')
   };    
 
@@ -179,6 +184,7 @@ class App extends React.Component  {
 
   onBalance = (event) => {
       this.setState({status:1})// 1 : loading
+      this.setState({infos :[]})
 
       const sm_balance = "https://api2.splinterlands.com/players/balances?username="
       fetch(sm_balance + this.state.account)

@@ -211,8 +211,8 @@ class App extends React.Component  {
       <div> 
       <div> 
         <div>
-//            <GetPriceFromSmon data={this.state.hiveData} hive={this.state.geckoData} />
-//            <GetPriceFromUpbit data={this.state.upbitData} />
+            <GetPriceFromSmon data={this.state.hiveData} hive={this.state.geckoData} />
+            <GetPriceFromUpbit data={this.state.upbitData} />
             <h2 style={{textAlign:"center"}}> &nbsp;Steem Monster Information &nbsp;</h2>  
         </div>
       </div>

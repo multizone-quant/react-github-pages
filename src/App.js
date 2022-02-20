@@ -17,8 +17,16 @@ import { doc, getDoc, getDocs, setDoc,addDoc, Timestamp, collection, query } fro
 
 import axios from "axios";
   
-import {Button} from 'reactstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+//import {Button} from 'reactstrap';
+//import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* @param data 문자열
+ * @param len 최종 문자열 길이
+ * @param specific 채울 문자 */
+function fillZeroInt(dt, len){
+  const data = String(dt)
+  return data.length >= len? data : new Array(len-data.length+1).join('0')+data;
+}
 
 class App extends React.Component  {
   state = {
@@ -86,8 +94,10 @@ class App extends React.Component  {
 //        console.log(ret)
       }
       else {
-
-        var col = collection(db, "smon-related", "chaos-pack", "2022-02-19")
+        const dt = new Date()
+        const want = dt.getFullYear() + '-' + fillZeroInt(dt.getMonth()+1,2) + '-' + dt.getDate()
+        console.log(want)
+        var col = collection(db, "smon-related", "chaos-pack", want)
         const docSnap = await getDocs(col);
         var pre = 0
         docSnap.forEach((doc) => {

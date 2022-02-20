@@ -3,6 +3,8 @@ import React, {useState} from 'react';
 import GetPriceFromUpbit from './Upbit';
 import GetPriceFromSmon from './Smon';
 import GetChaosInfo from './Chaos-firebase';
+import GetCoinPriceFromSmon from './CoinPrice';
+
 //import ReactstrapBottons1 from './myButton';
 //import ReactstrapBottons from './carbonButton';
 
@@ -71,6 +73,7 @@ class App extends React.Component  {
     count : 0,
     upbitData : {},
     smonData:{},
+    smonPriceData:[],
     hiveData:{},    
     geckoData:{},
     infos: []
@@ -80,9 +83,10 @@ class App extends React.Component  {
     console.log('comp mounted rendered')
 
     this.Request2Coingecko()
-    this.Request2Upbit2()
+//    this.Request2Upbit2()
     this.Request2Smon()
     this.Request2HiveEngine()
+    this.Request2CoinPriceSmon()    
 
     setTimeout(() => {
       this.setState({loading:false});
@@ -220,6 +224,20 @@ class App extends React.Component  {
     });
   }
 
+  Request2CoinPriceSmon = async() => {
+    const url = 'https://prices.splinterlands.com/prices'
+    const data  = await axios.get(url);
+    console.log('price', data)
+    this.setState({smonPriceData :data.data})
+/*
+    fetch(url)
+    .then((response) => response.json())
+    .then((json) => {
+        this.setState({smonPriceData :json})
+    });
+*/
+  }
+
   onBalance = (event) => {
       this.setState({status:1})// 1 : loading
       this.setState({infos :[]})
@@ -260,6 +278,8 @@ class App extends React.Component  {
     return (
       <div> 
       <div> 
+        <GetPriceFromSmon data={this.state.hiveData} hive={this.state.geckoData} />
+        <GetCoinPriceFromSmon data={this.state.smonPriceData} />
         <div>
             <h2 style={{textAlign:"center"}}> &nbsp;Steem Monster Information &nbsp;</h2>  
         </div>

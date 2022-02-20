@@ -3,8 +3,9 @@ import React, {useState} from 'react';
 import GetPriceFromUpbit from './Upbit';
 import GetPriceFromSmon from './Smon';
 import GetChaosInfo from './Chaos-firebase';
-//import Button from 'react-bootstrap/Button';
-//import 'bootstrap/dist/css/bootstrap.min.css';
+//import ReactstrapBottons1 from './myButton';
+//import ReactstrapBottons from './carbonButton';
+
 
 import firebase from 'firebase/compat/app'
 import 'firebase/firestore'
@@ -16,6 +17,9 @@ import { doc, getDoc, getDocs, setDoc,addDoc, Timestamp, collection, query } fro
 
 import axios from "axios";
   
+import {Button} from 'reactstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 class App extends React.Component  {
   state = {
     loading : -1,
@@ -69,7 +73,7 @@ class App extends React.Component  {
     */
     const db = getFirestore();
     var ret = []
-    if (cmd == 'chaos') {
+    if (cmd === 'chaos') {
       const test_singledoc = 0
       if (test_singledoc) { 
         const docRef = doc(db, "smon-related", "chaos-pack", "2022-02-18", '11');
@@ -91,7 +95,7 @@ class App extends React.Component  {
           console.log(doc.id, " => ", doc.data());
           data = doc.data()
 //          ret.push(doc)
-          if (pre == 0) 
+          if (pre === 0) 
             pre = data.qty
           
           var diff =  data.qty - pre
@@ -177,10 +181,6 @@ class App extends React.Component  {
         this.setState({upbitData :json})
     });
   }
-  onChange = (event) => {
-//    setAccount(event.target.value);
-    this.setState({account :event.target.value})
-  };
 
   onBalance = (event) => {
       this.setState({status:1})// 1 : loading
@@ -210,6 +210,12 @@ class App extends React.Component  {
   render() {
 //    console.log('waiting', this.state.loading)
 //    console.log('upbit', this.state.upbitData)
+
+// <ReactstrapBottons />
+
+//<GetPriceFromSmon data={this.state.hiveData} hive={this.state.geckoData} />
+//<GetPriceFromUpbit data={this.state.upbitData} />
+
     const {status} = this.state;
     const {infos} = this.state;
     console.log('in render', {infos})
@@ -217,8 +223,6 @@ class App extends React.Component  {
       <div> 
       <div> 
         <div>
-            <GetPriceFromSmon data={this.state.hiveData} hive={this.state.geckoData} />
-            <GetPriceFromUpbit data={this.state.upbitData} />
             <h2 style={{textAlign:"center"}}> &nbsp;Steem Monster Information &nbsp;</h2>  
         </div>
       </div>
@@ -244,14 +248,14 @@ class App extends React.Component  {
       <div>
           {
               status < 2 ? (
-                status == 1? (
+                status === 1? (
                       <h1 style={{ color: 'black',textAlign: 'center' }}> Loading...</h1>
                   )
                   : ""  
               ) : ""
           }
           {
-              status == 2 ? (  // balance
+              status === 2 ? (  // balance
                   infos.length  > 0 ? (
                     <table border="1" align="center">
                         <thead>
@@ -271,7 +275,7 @@ class App extends React.Component  {
                     </table>
                   ):''
               ) : 
-              status == 8 ? (  // chaos pack info
+              status === 8 ? (  // chaos pack info
                 infos.length  > 0 ? (                
                   <GetChaosInfo data={this.state.infos}/>
                 ):''

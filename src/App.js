@@ -28,6 +28,41 @@ function fillZeroInt(dt, len){
   return data.length >= len? data : new Array(len-data.length+1).join('0')+data;
 }
 
+async function getFireBase (cmd, want) {
+  /*    
+      const auth = getAuth();
+      await signInAnonymously(auth) 
+  */
+  const db = getFirestore();
+  var ret = []
+  if (cmd === 'chaos') {
+    const test_singledoc = 0
+    if (test_singledoc) { 
+      const docRef = doc(db, "smon-related", "chaos-pack", "2022-02-18", '11');
+      const docSnap = await getDoc(docRef);
+      var data = docSnap.data()
+      console.log(data)
+      console.log(data.date, data.qty)
+//        ret.push(docSnap)
+      ret.push({date:data.date, qty:data.qty}) 
+//        console.log(ret)
+    }
+    else {
+      var col = collection(db, "smon-related", "chaos-pack", want)
+      const docSnap = await getDocs(col);
+      docSnap.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        console.log(doc.id, " => ", doc.data());
+        data = doc.data()
+        ret.push({date:data.date, qty:data.qty, diff:0}) 
+      });
+
+      console.log(ret)
+    }      
+    return ret
+  }
+}
+
 class App extends React.Component  {
   state = {
     loading : -1,
@@ -79,48 +114,41 @@ class App extends React.Component  {
         const auth = getAuth();
         await signInAnonymously(auth) 
     */
-    const db = getFirestore();
-    var ret = []
-    if (cmd === 'chaos') {
-      const test_singledoc = 0
-      if (test_singledoc) { 
-        const docRef = doc(db, "smon-related", "chaos-pack", "2022-02-18", '11');
-        const docSnap = await getDoc(docRef);
-        var data = docSnap.data()
-        console.log(data)
-        console.log(data.date, data.qty)
-//        ret.push(docSnap)
-        ret.push({date:data.date, qty:data.qty}) 
-//        console.log(ret)
-      }
-      else {
-        const dt = new Date()
-        const want = dt.getFullYear() + '-' + fillZeroInt(dt.getMonth()+1,2) + '-' + dt.getDate()
-        console.log(want)
-        var col = collection(db, "smon-related", "chaos-pack", want)
-        const docSnap = await getDocs(col);
-        var pre = 0
-        docSnap.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          console.log(doc.id, " => ", doc.data());
-          data = doc.data()
-//          ret.push(doc)
-          if (pre === 0) 
-            pre = data.qty
-          
-          var diff =  data.qty - pre
-          pre = data.qty
 
-          ret.push({date:data.date, qty:data.qty, diff:diff}) 
-        });
-        console.log(ret)
-      }      
+    // get # sold for today
+    const dt = new Date()
+    var want = dt.getFullYear() + '-' + fillZeroInt(dt.getMonth()+1,2) + '-' + fillZeroInt(dt.getDate(), 2)
+    console.log(want)
+    const ret1 = await getFireBase('chaos', want)
 
-      // sort
-      ret.sort((a,b) => b.date.localeCompare(a.date));
-      this.setState({status:8})
-      this.setState({infos :ret})
+    // get # sold for yesterday
+    want = dt.getFullYear() + '-' + fillZeroInt(dt.getMonth()+1,2) + '-' + fillZeroInt(dt.getDate()-1, 2)
+    console.log(want)
+    
+    const ret2 = await getFireBase('chaos', want)
+    var ret
+
+    console.log('merge')
+    if (ret1.length > 0 ) {      
+      ret = ret1.concat(ret2)
+      console.log('if ret1', ret1)
+      console.log('ret2', ret2)
+      console.log('ret', ret)
     }
+    else {
+      console.log('else ret2', ret2)
+      ret = ret2
+    }
+    // sort
+    ret.sort((a,b) => b.date.localeCompare(a.date));
+    // update increase
+    for(var i=0; i<ret.length-1; i++)
+      ret[i].diff = ret[i].qty - ret[i+1].qty  
+
+    console.log(ret)
+
+    this.setState({status:8})
+    this.setState({infos :ret})
   }
 
   onChaos = (event) => {

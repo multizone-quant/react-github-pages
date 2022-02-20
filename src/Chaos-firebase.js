@@ -78,9 +78,15 @@ async function GetFromFireBase() {
 }
 
 function GetChaosInfo({data}) {
-    console.log('GetChaosInfo', data)    
+    var limit = 24
+    if (data.lenght < 24) 
+        limit = data.length
+
+    const sold_24_hour = data[0].qty - data[limit-1].qty
+
     return (
         <div>
+            <h3 style={{textAlign:"center"}}> # sold (last 24h) : {sold_24_hour.toLocaleString()} packs</h3>
             <table border="1" align="center">
                 <thead>
                     <th> Date </th>

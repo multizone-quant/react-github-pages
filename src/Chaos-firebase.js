@@ -96,7 +96,7 @@ function GetChaosInfo({data}) {
                 <tbody>
                     {data.map((info, index) => (
                             <tr key={index} align="center"> 
-                                <td> &nbsp;{info.date} &nbsp;</td>  
+                                <td> &nbsp;{new Date(info.date).toLocaleString()} &nbsp;</td>  
                                 <td> &nbsp; &nbsp;{info.qty.toLocaleString()} &nbsp;</td> 
                                 <td> &nbsp;{info.diff.toLocaleString()} &nbsp;</td> 
                             </tr>

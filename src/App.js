@@ -8,6 +8,7 @@ import GetCoinPriceFromSmon from './CoinPrice';
 //import ReactstrapBottons1 from './myButton';
 //import ReactstrapBottons from './carbonButton';
 
+import moment from 'moment';
 
 import firebase from 'firebase/compat/app'
 import 'firebase/firestore'
@@ -50,7 +51,7 @@ async function getFireBase (cmd, want) {
 //        console.log(ret)
     }
     else {
-      var col = collection(db, "smon-related", "chaos-pack", want)
+      var col = collection(db, "smon-related", "chaos-pack-1", want)
       const docSnap = await getDocs(col);
       docSnap.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
@@ -118,16 +119,30 @@ class App extends React.Component  {
         const auth = getAuth();
         await signInAnonymously(auth) 
     */
+   /*
+    console.log('moment utc', moment.utc().format());
+    console.log('moment', moment().format());
+    const dt = moment.utc();
+    console.log('moment', dt.utc().month(1).format("YYYY-MM-DD"),  dt.utc().hour())
+  
+    const want = dt.utc().month(1).format("YYYY-MM-DD")
+  */
+      
+    // get # sold for today(utc)
+    //const dt = new Date()
+    const dt = moment.utc();
 
-    // get # sold for today
-    const dt = new Date()
-    var want = dt.getFullYear() + '-' + fillZeroInt(dt.getMonth()+1,2) + '-' + fillZeroInt(dt.getDate(), 2)
-    console.log(want)
+//    var want = dt.getFullYear() + '-' + fillZeroInt(dt.getMonth()+1,2) + '-' + fillZeroInt(dt.getDate(), 2)
+    var want = dt.utc().month(1).format("YYYY-MM-DD")
+    console.log('want1', want)
     const ret1 = await getFireBase('chaos', want)
 
     // get # sold for yesterday
-    want = dt.getFullYear() + '-' + fillZeroInt(dt.getMonth()+1,2) + '-' + fillZeroInt(dt.getDate()-1, 2)
-    console.log(want)
+    var yesterday = dt.utc().subtract(1, 'day');
+    want = yesterday.utc().month(1).format("YYYY-MM-DD")
+
+//    want = dt.getFullYear() + '-' + fillZeroInt(dt.getMonth()+1,2) + '-' + fillZeroInt(dt.getDate()-1, 2)
+    console.log('want2', want)
     
     const ret2 = await getFireBase('chaos', want)
     var ret
